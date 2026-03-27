@@ -1,0 +1,164 @@
+-- XxDEMONxX Multi-Tab Hub
+-- Dark Blue (0, 0, 139) | Red Branding (255, 0, 0)
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local VirtualUser = game:GetService("VirtualUser")
+local RunService = game:GetService("RunService")
+
+local kicksBlocked = 0
+local startTime = os.time()
+local afkEnabled = false
+
+-- UI Setup
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "XxDEMONxX_Hub"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ResetOnSpawn = false
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 139) -- Dark Blue
+MainFrame.Position = UDim2.new(0.5, -125, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 250, 0, 220)
+MainFrame.BorderSizePixel = 2
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+-- Branding
+local Title = Instance.new("TextLabel")
+Title.Parent = MainFrame
+Title.Size = UDim2.new(1, 0, 0, 35)
+Title.BackgroundTransparency = 1
+Title.Text = "XxDEMONxX HUB"
+Title.TextColor3 = Color3.fromRGB(255, 0, 0) -- Red
+Title.Font = Enum.Font.SourceSansBold
+Title.TextSize = 22
+
+-- Tabs
+local TabBar = Instance.new("Frame")
+TabBar.Parent = MainFrame
+TabBar.Position = UDim2.new(0, 0, 0, 35)
+TabBar.Size = UDim2.new(1, 0, 0, 30)
+TabBar.BackgroundColor3 = Color3.fromRGB(0, 0, 100)
+
+local AfkTabBtn = Instance.new("TextButton")
+AfkTabBtn.Parent = TabBar
+AfkTabBtn.Size = UDim2.new(0.5, 0, 1, 0)
+AfkTabBtn.Text = "Anti-AFK"
+AfkTabBtn.TextColor3 = Color3.new(1, 1, 1)
+AfkTabBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+
+local FpsTabBtn = Instance.new("TextButton")
+FpsTabBtn.Parent = TabBar
+FpsTabBtn.Position = UDim2.new(0.5, 0, 0, 0)
+FpsTabBtn.Size = UDim2.new(0.5, 0, 1, 0)
+FpsTabBtn.Text = "FPS Booster"
+FpsTabBtn.TextColor3 = Color3.new(1, 1, 1)
+FpsTabBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+
+-- Pages
+local AfkPage = Instance.new("Frame")
+AfkPage.Parent = MainFrame
+AfkPage.Position = UDim2.new(0, 0, 0, 65)
+AfkPage.Size = UDim2.new(1, 0, 1, -65)
+AfkPage.BackgroundTransparency = 1
+
+local FpsPage = Instance.new("Frame")
+FpsPage.Parent = MainFrame
+FpsPage.Position = UDim2.new(0, 0, 0, 65)
+FpsPage.Size = UDim2.new(1, 0, 1, -65)
+FpsPage.BackgroundTransparency = 1
+FpsPage.Visible = false
+
+-- ANTI-AFK TAB CONTENT
+local ExecBtn = Instance.new("TextButton")
+ExecBtn.Parent = AfkPage
+ExecBtn.Position = UDim2.new(0.1, 0, 0.1, 0)
+ExecBtn.Size = UDim2.new(0.8, 0, 0, 35)
+ExecBtn.Text = "Execute Anti-AFK"
+ExecBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ExecBtn.TextColor3 = Color3.new(1, 1, 1)
+
+local TimerLabel = Instance.new("TextLabel")
+TimerLabel.Parent = AfkPage
+TimerLabel.Position = UDim2.new(0, 0, 0.4, 0)
+TimerLabel.Size = UDim2.new(1, 0, 0, 25)
+TimerLabel.BackgroundTransparency = 1
+TimerLabel.Text = "Session: 00:00:00"
+TimerLabel.TextColor3 = Color3.new(1, 1, 1)
+TimerLabel.Visible = false
+
+local KicksLabel = Instance.new("TextLabel")
+KicksLabel.Parent = AfkPage
+KicksLabel.Position = UDim2.new(0, 0, 0.6, 0)
+KicksLabel.Size = UDim2.new(1, 0, 0, 25)
+KicksLabel.BackgroundTransparency = 1
+KicksLabel.Text = "Kicks Blocked: 0"
+KicksLabel.TextColor3 = Color3.new(1, 1, 1)
+KicksLabel.Visible = false
+
+-- Logic for Execution
+ExecBtn.MouseButton1Click:Connect(function()
+    afkEnabled = true
+    ExecBtn.Text = "ACTIVE"
+    ExecBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+    TimerLabel.Visible = true
+    KicksLabel.Visible = true
+    
+    -- Load the external script too as requested
+    loadstring(game:HttpGet("https://pastebin.com"))()
+end)
+
+-- Anti-AFK Detection
+LocalPlayer.Idled:Connect(function()
+    if afkEnabled then
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+        kicksBlocked = kicksBlocked + 1
+        KicksLabel.Text = "Kicks Blocked: " .. kicksBlocked
+    end
+end)
+
+-- Session Timer Loop
+RunService.RenderStepped:Connect(function()
+    if afkEnabled then
+        local diff = os.time() - startTime
+        local hours = math.floor(diff / 3600)
+        local mins = math.floor((diff % 3600) / 60)
+        local secs = diff % 60
+        TimerLabel.Text = string.format("Session: %02d:%02d:%02d", hours, mins, secs)
+    end
+end)
+
+-- FPS BOOSTER TAB CONTENT
+local BoostBtn = Instance.new("TextButton")
+BoostBtn.Parent = FpsPage
+BoostBtn.Position = UDim2.new(0.1, 0, 0.3, 0)
+BoostBtn.Size = UDim2.new(0.8, 0, 0, 40)
+BoostBtn.Text = "Boost FPS"
+BoostBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+BoostBtn.TextColor3 = Color3.new(1, 1, 1)
+
+BoostBtn.MouseButton1Click:Connect(function()
+    settings().Rendering.QualityLevel = 1
+    for _, v in pairs(game:GetDescendants()) do
+        if v:IsA("Part") or v:IsA("MeshPart") then
+            v.Material = Enum.Material.SmoothPlastic
+        elseif v:IsA("Decal") or v:IsA("Texture") then
+            v.Transparency = 1
+        end
+    end
+    BoostBtn.Text = "FPS Boosted!"
+    BoostBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+end)
+
+-- Switching Tabs
+AfkTabBtn.MouseButton1Click:Connect(function()
+    AfkPage.Visible = true
+    FpsPage.Visible = false
+end)
+FpsTabBtn.MouseButton1Click:Connect(function()
+    AfkPage.Visible = false
+    FpsPage.Visible = true
+end)
