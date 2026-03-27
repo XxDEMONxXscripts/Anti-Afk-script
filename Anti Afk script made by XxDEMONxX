@@ -1,4 +1,4 @@
--- XxDEMONxX Multi-Tab Hub
+-- Anti Afk made by XxDEMONxX 
 -- Dark Blue (0, 0, 139) | Red Branding (255, 0, 0)
 
 local Players = game:GetService("Players")
@@ -76,7 +76,7 @@ local ExecBtn = Instance.new("TextButton")
 ExecBtn.Parent = AfkPage
 ExecBtn.Position = UDim2.new(0.1, 0, 0.1, 0)
 ExecBtn.Size = UDim2.new(0.8, 0, 0, 35)
-ExecBtn.Text = "Execute Anti-AFK"
+ExecBtn.Text = " Anti-AFK"
 ExecBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 ExecBtn.TextColor3 = Color3.new(1, 1, 1)
 
